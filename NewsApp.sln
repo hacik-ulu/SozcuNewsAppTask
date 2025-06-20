@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36203.30 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsApp.Api", "NewsApp.Api\NewsApp.Api.csproj", "{FDF31379-390B-4EAD-BAA7-8B8813D5A51C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsApp.WebUI", "NewsApp.WebUI\NewsApp.WebUI.csproj", "{E94138AE-BA5A-402D-96CA-112DF6B66993}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FDF31379-390B-4EAD-BAA7-8B8813D5A51C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDF31379-390B-4EAD-BAA7-8B8813D5A51C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDF31379-390B-4EAD-BAA7-8B8813D5A51C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDF31379-390B-4EAD-BAA7-8B8813D5A51C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E94138AE-BA5A-402D-96CA-112DF6B66993}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E94138AE-BA5A-402D-96CA-112DF6B66993}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E94138AE-BA5A-402D-96CA-112DF6B66993}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E94138AE-BA5A-402D-96CA-112DF6B66993}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6F88AB72-9177-4E2D-A7CE-91F428FC7174}
+	EndGlobalSection
+EndGlobal
