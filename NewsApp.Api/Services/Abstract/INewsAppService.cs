@@ -4,6 +4,6 @@ namespace NewsApp.Api.Services.Abstract
 {
     public interface INewsAppService
     {
-        Task<List<NewsAppDto>> GetNewsListAsync()
+        Task<List<NewsAppDto>> GetNewsListAsync();
     }
 }
