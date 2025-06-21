@@ -7,6 +7,7 @@ namespace NewsApp.Api.Services.Concrete
 {
     public class NewsAppService : INewsAppService
     {
+        // //https://www.youtube.com/watch?v=m9zFq6KS94Y&ab_channel=ShaunHalverson buradaki videodan WebScraper, WebScraper2 projesinden yararlandım bu sayfada.
         public async Task<List<NewsAppDto>> GetNewsListAsync()
         {
             // Haber verilerini tutacak dto listesini oluşturdum.
@@ -19,7 +20,7 @@ namespace NewsApp.Api.Services.Concrete
             HttpClient httpClient = new HttpClient();
             var response = await httpClient.GetStringAsync(newsUrl);
 
-            // Html içeriğini okumak adına (div,class,span) gelen verileri buraya yükledik
+            // Html içeriğini okumak adına (div,class,span) gelen verileri buraya yükledik - HtmlAgilityPack library indirdim ve kullandım.
             var htmlDocument = new HtmlAgilityPack.HtmlDocument();
             htmlDocument.LoadHtml(response);
 
@@ -31,7 +32,7 @@ namespace NewsApp.Api.Services.Concrete
             }
 
             // Eğer haber içeriğini ve node kısmını doğru okuduysam foreachle 30 ornek haberi gezdim.
-            foreach (var newsNode in nodes.Take(30))
+            foreach (var newsNode in nodes.Take(20))
             {
                 // a href bağlantısına bastığımızda haber detaylarına erişebilmek için her birinin linklerini kontrol ettim.
                 var anchorLink = newsNode.SelectSingleNode(".//a");
@@ -46,14 +47,18 @@ namespace NewsApp.Api.Services.Concrete
                 var hrefLink = anchorLink.GetAttributeValue("href", "").Trim();
                 var totalUrl = hrefLink.StartsWith("http") ? hrefLink : "https://www.sozcu.com.tr" + hrefLink;
 
-                // Haber başlığını alıp temizliyoruz.
-                var newsTitle = WebUtility.HtmlDecode(anchorLink.InnerText.Trim());
 
                 // Haber detay sayfasının Html içeriğini string olarak indiriyoruz.
                 // Html içeriğini anlamlı şekilde paralayarak analiz etmeyi ve işlem yapmayı hedefliyoruz.
                 var detail = await httpClient.GetStringAsync(totalUrl);
                 var detailDocumentary = new HtmlAgilityPack.HtmlDocument();
                 detailDocumentary.LoadHtml(detail);
+
+                // Haber başlığını alıp temizliyoruz HtmlDecode ile.
+                var newsTitle = WebUtility.HtmlDecode(
+                    detailDocumentary.DocumentNode
+                               .SelectSingleNode("//h1[@class='fw-bold mb-4']")
+                               ?.InnerText.Trim() ?? "");
 
                 // Haberin içeriğinin classını vererek node'unu buluyoruz.
                 var newsContentNode = detailDocumentary.DocumentNode
