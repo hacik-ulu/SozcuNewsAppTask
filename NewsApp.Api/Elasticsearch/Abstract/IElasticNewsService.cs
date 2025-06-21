@@ -2,5 +2,6 @@
 {
     public interface IElasticNewsService
     {
+        Task BulkNewsFromApiAsync();
     }
 }
