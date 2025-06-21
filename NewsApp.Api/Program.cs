@@ -18,6 +18,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<INewsAppService, NewsAppService>();
 builder.Services.AddScoped<IElasticNewsService, ElasticNewsService>();
+builder.Services.AddHttpClient();
 
 // elastic search deployment ve indexleme ayarlarýný gerçekleþtirdim.
 builder.Services.AddSingleton<IElasticClient>(x =>

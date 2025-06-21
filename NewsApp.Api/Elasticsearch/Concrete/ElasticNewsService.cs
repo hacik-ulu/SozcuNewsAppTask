@@ -47,6 +47,7 @@ namespace NewsApp.Api.Elasticsearch.Concrete
                           .Index("news-app-demo") // Program.cs deki Index konumu
                           .BackOffRetries(2) // Hata durumunda kaç defa bulk deneneceği
                           .BackOffTime("3s") // Kaç saniye arayla tekrar deneneceği
+                          .ContinueAfterDroppedDocuments()
                           .MaxDegreeOfParallelism(2) // Aynı anda kaç bulk isteği gönderebileceğimiz
                           .Size(50), // İşlem/Haber sayısı
                       cancellationToken);
@@ -94,7 +95,16 @@ namespace NewsApp.Api.Elasticsearch.Concrete
 
 }
 
+#region ElasticSearch DevTools Queries
 
+//GET news-app-demo/_search
+//{
+//    "size": 30
+//}
+
+//DELETE news-app-demo
+
+#endregion
 
 
 #region Code Source
