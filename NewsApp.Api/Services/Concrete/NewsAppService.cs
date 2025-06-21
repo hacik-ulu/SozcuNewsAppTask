@@ -7,14 +7,18 @@ namespace NewsApp.Api.Services.Concrete
 {
     public class NewsAppService : INewsAppService
     {
-        // //https://www.youtube.com/watch?v=m9zFq6KS94Y&ab_channel=ShaunHalverson buradaki videodan WebScraper, WebScraper2 projesinden yararlandım bu sayfada.
+        #region Video Src
+        //https://www.youtube.com/watch?v=m9zFq6KS94Y&ab_channel=ShaunHalverson buradaki videodan WebScraper, WebScraper2 projesinden yararlandım bu sayfada.
+        #endregion
+
         public async Task<List<NewsAppDto>> GetNewsListAsync()
         {
             // Haber verilerini tutacak dto listesini oluşturdum.
             var newsList = new List<NewsAppDto>();
 
             // haberlerin çekileceği base url'i verdim.
-            var newsUrl = "https://www.sozcu.com.tr/kategori/ekonomi/";
+            //var newsUrl = "https://www.sozcu.com.tr/kategori/ekonomi/";
+            var newsUrl = "https://www.sozcu.com.tr/kategori/spor";
 
             // HttpClient ile bağlantı açtım sornasında newsUrle get isteği attım ve html sayfasının gelen yanıtlarını string olarak tuttum.
             HttpClient httpClient = new HttpClient();
@@ -31,7 +35,7 @@ namespace NewsApp.Api.Services.Concrete
                 return newsList;
             }
 
-            // Eğer haber içeriğini ve node kısmını doğru okuduysam foreachle 30 ornek haberi gezdim.
+            // Eğer haber içeriğini ve node kısmını doğru okuduysam foreachle 20 ornek haberi gezdim.
             foreach (var newsNode in nodes.Take(20))
             {
                 // a href bağlantısına bastığımızda haber detaylarına erişebilmek için her birinin linklerini kontrol ettim.
@@ -56,9 +60,8 @@ namespace NewsApp.Api.Services.Concrete
 
                 // Haber başlığını alıp temizliyoruz HtmlDecode ile.
                 var newsTitle = WebUtility.HtmlDecode(
-                    detailDocumentary.DocumentNode
-                               .SelectSingleNode("//h1[@class='fw-bold mb-4']")
-                               ?.InnerText.Trim() ?? "");
+                detailDocumentary.DocumentNode.SelectSingleNode("//h1[@class='fw-bold mb-4']")?.InnerText.Trim()
+                ?? detailDocumentary.DocumentNode.SelectSingleNode("//h1[@class='author-content-title']")?.InnerText.Trim());
 
                 // Haberin içeriğinin classını vererek node'unu buluyoruz.
                 var newsContentNode = detailDocumentary.DocumentNode
@@ -103,15 +106,16 @@ namespace NewsApp.Api.Services.Concrete
                     ?.GetAttributeValue("content", "") ?? "";
 
                 // Tüm bu çektiğimiz verileri en basta olusturduğumuz listeye ekleyerek Dto nesnesine geçiriyoruz.
+                // Özel karakterlerin temizlenmesi amacıyla en sonda HtmlDecode ediyoruz.
                 newsList.Add(new NewsAppDto
                 {
                     NewsUrl = totalUrl,
-                    ImageUrl = imageUrl,
-                    Title = newsTitle,
-                    Content = newsContent,
-                    Summary = newsSummary,
-                    Author = newsAuthor,
-                    Category = newsCategory,
+                    ImageUrl = WebUtility.HtmlDecode(imageUrl),
+                    Title = WebUtility.HtmlDecode(newsTitle),
+                    Content = WebUtility.HtmlDecode(newsContent),
+                    Summary = WebUtility.HtmlDecode(newsSummary),
+                    Author = WebUtility.HtmlDecode(newsAuthor),
+                    Category = WebUtility.HtmlDecode(newsCategory),
                     Date = datePublish,
                 });
             }
@@ -123,14 +127,14 @@ namespace NewsApp.Api.Services.Concrete
 
 #region Example Data From Sozcu
 //{
-//    "title": "THY İspanyollara ortak oluyor",
-//        "content": "Türk Hava Yolları, İspanyol havayolu şirketi Air Europa’da azınlık hissesi satın almak için teklifte bulunmayı değerlendiriyor. Bu konuyla ilgilenen diğer büyük havayolları da bulunuyor.\nReuters’ın Cuma günü yayınladığı habere göre, hisse için bağlayıcı tekliflerin Temmuz ayı başına kadar verilmesi gerekiyor.\nHidalgo ailesinin Globalia holding şirketine ait olan Air Europa, birçok büyük havayolu şirketinin ilgisini çekiyor. Air France KLM ve Lufthansa da İspanyol havayolu şirketinde hisse satın almak için görüşmeler yürütüyor.\nTürk Hava Yolları şu anda Air Europa ile kod paylaşımı anlaşmasına sahip. Air Europa, gelirinin yüzde 25’inden fazlasını Avrupa operasyonlarından elde ediyor.",
-//        "summary": "Türk Hava Yolları, Air Europa’da azınlık hissesi satın almak için teklif hazırlığında. Lufthansa ve Air France-KLM gibi devlerle rekabet eden THY, Temmuz başına kadar kararını verecek.",
-//        "newsUrl": "https://www.sozcu.com.tr/thy-ispanyollara-ortak-oluyor-p186097",
-//        "imageUrl": "https://sozcu01.sozcucdn.com/sozcu/production/uploads/images/2025/4/thy1jpg-Fw1iBDFWR0KFvcwO360erQ.jpg?w=1270&amp;h=675&amp;mode=crop&amp;scale=both",
-//        "category": "Ekonomi",
-//        "author": "Haber Merkezi",
-//        "date": "2025-06-20T17:46:41.6034957+03:00"
+//    "title": "Hırvat dalışçı, rekorlar kitabına girdi",
+//        "content": "Hırvat serbest dalışçı Vitomir Maricic, 29 dakika 3 saniyelik zamanlamasıyla su altında en uzun süre nefes tutma rekoru kırarak, 'Guinness Dünya Rekorlar Kitabı'na girmeye hak kazandı. Maricic, rekor denemesini ülkesinin Opatija kentinde yer alan bir otelde 3 metre derinliğindeki havuzda gerçekleştirdi. Deneme, Guinness Dünya Rekorları'nın gerekliliklerine uygunluk sağlanması amacıyla hakemler tarafından resmi olarak takip edildi. Rekor denemesine 100'den fazla izleyici de tanıklık etti. Vitomir Maricic, suyun altında 29 dakika 3 saniye nefesini tutarak dünya rekoruna imza attı ve adını 'Guinness Dünya Rekorlar Kitabı'na yazdırmayı başardı. Bu alanda bir önce rekoru, 2021 yılında 24 dakika 37 saniyelik süresiyle Hırvat sporcu Budimir Sobat kırmıştı.",
+//        "summary": "Hırvat serbest dalışçı Vitomir Maricic'den su altında en uzun süre nefes tutma rekoru. Maricic, 29 dakika 3 saniyelik zamanlamasıyla adını \"Guinness Dünya Rekorlar Kitabı\"na yazdırdı",
+//        "newsUrl": "https://www.sozcu.com.tr/hirvat-dalisci-rekorlar-kitabina-girdi-p185776",
+//        "imageUrl": "https://sozcu01.sozcucdn.com/sozcu/production/uploads/images/2025/6/ekran-goruntusu-20250619-191305png-OIpwAlQsR0_HLKkczd0emA.png?w=1270&h=675&mode=crop&scale=both",
+//        "category": "Diğer Sporlar",
+//        "author": "AA",
+//        "date": "2025-06-21T13:13:19.6519226+03:00"
 //    }
 #endregion
 
