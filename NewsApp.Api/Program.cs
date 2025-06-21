@@ -7,8 +7,7 @@ using NewsApp.Api.Workers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-//builder.Configuration.AddJsonFile("secrets.json", optional: false, reloadOnChange: true);
+// secret.json ekledim
 builder.Configuration.AddUserSecrets<Program>();
 var config = builder.Configuration;
 
@@ -18,6 +17,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<INewsAppService, NewsAppService>();
 
+// elastic search deployment ve indexleme ayarlarýný gerçekleþtirdim.
 builder.Services.AddSingleton<IElasticClient>(x =>
 {
     var settings = new ConnectionSettings(config["cloudId"], new BasicAuthenticationCredentials(
