@@ -17,7 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<INewsAppService, NewsAppService>();
-builder.Services.AddScoped<IElasticNewsService, ElasticNewsService>();
+builder.Services.AddSingleton<IElasticNewsService, ElasticNewsService>();
 builder.Services.AddHttpClient();
 
 // elastic search deployment ve indexleme ayarlarýný gerçekleþtirdim.
@@ -31,7 +31,6 @@ builder.Services.AddSingleton<IElasticClient>(x =>
     return new ElasticClient(settings);
 });
 
-// builder.Services.AddHostedService<TestNews>();
 
 var app = builder.Build();
 
