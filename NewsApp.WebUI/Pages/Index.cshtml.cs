@@ -27,12 +27,23 @@ namespace NewsApp.WebUI.Pages
             );
 
             //.Documents-> Elasticsearchden gelen ve NewsAppDto nesneleriyle eþleþen koleksiyon.
-            News = news.Documents.ToList(); // Elasticsearchden gelen verileri (dokümanlarý) List<NewsAppDto> tipine ceviriyor.
+            //News = news.Documents.ToList(); // Elasticsearchden gelen verileri (dokümanlarý) List<NewsAppDto> tipine ceviriyor.
+
+            News = news.Hits.Select(x =>  // Elasticden gelen her bir belge(hit) için select yapýyoruz ve belgeye x atýyoruz
+            {
+                var documentary = x.Source;  // Elasticsearchdeki asýl veriyi deðiþkene atýyoruz
+                documentary.Id = x.Id; // Id'yi manuel olarak  DTO'ya ekliyoruz
+                return documentary; // id'li documenti artýk geri dönüyoruz ve listeliyoruz.
+            }).ToList();
         }
 
     }
 }
 
+
+// Sayfalama, haber içeriklerini ve modellerini listeleme, arama çubuðu nest ile elastic search
 #region
 //https://www.elastic.co/docs/reference/elasticsearch/clients/dotnet/examples
+
+// https://stackoverflow.com/questions/33834141/elasticsearch-and-nest-why-am-i-missing-the-id-field-on-a-query?utm_source=chatgpt.com Hits ile Id yakalama
 #endregion

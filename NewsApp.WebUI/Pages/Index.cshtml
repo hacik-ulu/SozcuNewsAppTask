@@ -1,14 +1,104 @@
 ﻿@page
 @model NewsApp.WebUI.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Haberler";
 }
 
-<h2>Haber Başlıkları</h2>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Haberler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
 
-<ul>
-    @foreach (var item in Model.News)
-    {
-        <li>@item.Title</li>
-    }
-</ul>
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+            .card:hover {
+                box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            }
+
+            .card img {
+                width: 100%;
+                height: 180px;
+                object-fit: cover;
+            }
+
+        .container {
+            padding: 15px;
+        }
+
+            .container h4 {
+                margin: 0 0 10px;
+                font-size: 1.2em;
+            }
+
+                .container h4 a {
+                    text-decoration: none;
+                    color: #222;
+                }
+
+        .summary {
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 10px;
+            height: 50px;
+            overflow: hidden;
+        }
+
+        .meta {
+            font-size: 0.8em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Spor Haberleri</h2>
+
+    <div class="news-grid">
+        @foreach (var item in Model.News)
+        {
+            <div class="card">
+                <img src="@item.ImageUrl" alt="@item.Title">
+                <div class="container">
+                    <h4><a href="@item.NewsUrl" target="_blank">@item.Title</a></h4>
+                    <p class="summary">
+                        @(item.Summary?.Length > 100 ? item.Summary.Substring(0, 70) + "..." : item.Summary)
+                    </p>
+                    <p class="meta">@item.Date.ToString("yyyy-MM-dd") | @item.Author | @item.Category</p>
+                    <p style="text-align:right;">
+                        <a asp-page="/Detail" target="_blank" asp-route-id="@item.Id">Detay</a>
+                    </p>
+                </div>
+            </div>
+
+        }
+    </div>
+
+</body>
+</html>
+
+
+@* #region CodeSrc
+//https://wpengine.com/resources/card-layout-css-grid-layout-how-to/?utm_source=chatgpt.com
+// https://www.w3schools.com/css/css_grid_container.asp
+#endregion *@
