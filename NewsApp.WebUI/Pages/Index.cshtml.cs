@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+ï»¿using Microsoft.AspNetCore.Mvc.RazorPages;
 using NewsApp.WebUI.Context;
 using NewsApp.WebUI.Dto;
 
@@ -9,7 +9,7 @@ namespace NewsApp.WebUI.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly ElasticsearchContext _elasticsearchContext;
 
-        public List<NewsAppDto> News { get; set; } = new(); //News adýnda boþ liste propertysi new'liyoruz.
+        public List<NewsAppDto> News { get; set; } = new(); //News adÄ±nda boÅŸ liste propertysi new'liyoruz.
 
         public IndexModel(ILogger<IndexModel> logger, ElasticsearchContext elasticsearchContext)
         {
@@ -20,20 +20,20 @@ namespace NewsApp.WebUI.Pages
         public async Task OnGetAsync()
         {
             var news = await _elasticsearchContext.Client.SearchAsync<NewsAppDto>(x => x
-                .Index("news-app-demo") // Hangi tablodan veri cekceðimizi belirtiyoruz.
+                .Index("news-app-demo") // Hangi tablodan veri cekceÄŸimizi belirtiyoruz.
                 .Query(y => y.MatchAll())
-                .Sort(z => z.Descending(t => t.Date)) // en yeni tarihe göre en yeni haber gelecek
+                .Sort(z => z.Descending(t => t.Date)) // en yeni tarihe gÃ¶re en yeni haber gelecek
                 .Size(20)
             );
 
-            //.Documents-> Elasticsearchden gelen ve NewsAppDto nesneleriyle eþleþen koleksiyon.
-            //News = news.Documents.ToList(); // Elasticsearchden gelen verileri (dokümanlarý) List<NewsAppDto> tipine ceviriyor.
+            //.Documents-> Elasticsearchden gelen ve NewsAppDto nesneleriyle eÅŸleÅŸen koleksiyon.
+            //News = news.Documents.ToList(); // Elasticsearchden gelen verileri (dokumanlar) List<NewsAppDto> tipine ceviriyor.
 
-            News = news.Hits.Select(x =>  // Elasticden gelen her bir belge(hit) için select yapýyoruz ve belgeye x atýyoruz
+            News = news.Hits.Select(x =>  // Elasticden gelen her bir belge(hit) icin select yapiyoruz ve belgeye x atÄ±yoruz
             {
-                var documentary = x.Source;  // Elasticsearchdeki asýl veriyi deðiþkene atýyoruz
+                var documentary = x.Source;  // Elasticsearchdeki asÄ±l veriyi degiskene atiyoruz
                 documentary.Id = x.Id; // Id'yi manuel olarak  DTO'ya ekliyoruz
-                return documentary; // id'li documenti artýk geri dönüyoruz ve listeliyoruz.
+                return documentary; // id'li documenti artï¿½k geri dï¿½nï¿½yoruz ve listeliyoruz.
             }).ToList();
         }
 
@@ -41,7 +41,7 @@ namespace NewsApp.WebUI.Pages
 }
 
 
-// Sayfalama, haber içeriklerini ve modellerini listeleme, arama çubuðu nest ile elastic search
+// Sayfalama, haber iceriklerini ve modellerini listeleme, arama Ã§ubuÄŸu nest ile elastic search
 #region
 //https://www.elastic.co/docs/reference/elasticsearch/clients/dotnet/examples
 

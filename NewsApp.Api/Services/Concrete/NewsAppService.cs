@@ -97,9 +97,10 @@ namespace NewsApp.Api.Services.Concrete
                     ?.InnerText.Trim() ?? "";
 
                 var dateNews = detailDocumentary.DocumentNode
-                    .SelectSingleNode("//meta[@property='article:published_time']")
-                    ?.GetAttributeValue("content", "") ?? "";
-                var datePublish = DateTime.TryParse(dateNews, out var dt) ? dt : DateTime.Now;
+                .SelectSingleNode("//time")
+                ?.GetAttributeValue("datetime", "");
+                var decodedDate = WebUtility.HtmlDecode(dateNews);
+                var datePublish = DateTime.Parse(decodedDate);
 
                 var imageUrl = detailDocumentary.DocumentNode
                     .SelectSingleNode("//meta[@property='og:image']")
@@ -116,7 +117,7 @@ namespace NewsApp.Api.Services.Concrete
                     Summary = WebUtility.HtmlDecode(newsSummary),
                     Author = WebUtility.HtmlDecode(newsAuthor),
                     Category = WebUtility.HtmlDecode(newsCategory),
-                    Date = datePublish,
+                    Date = datePublish
                 });
             }
 

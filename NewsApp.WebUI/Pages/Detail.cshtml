@@ -1,4 +1,58 @@
-﻿@page
+﻿@page "{id}"
 @model NewsApp.WebUI.Pages.DetailModel
+@using System.Globalization
 @{
+    ViewData["Title"] = "Haber Detayı";
 }
+
+<header class="mb-4">
+
+    <div class="pe-2">
+        <p>Haberler - <span style="color:red;">@Model.News.Category</span>
+    </div>
+
+    <div class="content-meta-dates mb-4">
+        <span class="content-meta-date">
+            <time datetime="@Model.News.Date.ToString("yyyy-MM-ddTHH:mm:sszzz")">
+                Yayınlanma Tarihi: @Model.News.Date.ToString("dd MMMM yyyy - HH:mm", new CultureInfo("tr-TR"))
+            </time>
+        </span>
+    </div>
+
+    <div class="d-flex align-items-center mb-4">
+        <div class="d-flex align-items-center author w-100">
+            <div class="d-flex flex-column w-100">
+                <h1 class="author-content-title">@Model.News.Title</h1>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="description mb-4 fw-medium fs-5 lh-base">
+        <p strong>@Model.News.Summary</p>
+    </h2>
+
+
+    <div class="d-flex align-items-center justify-content-between breadcrumb">
+        <div class="pe-2 d-flex align-items-center">
+            <span class="fw-bold me-1">Yazar -</span>
+            <span class="text-primary fw-bold">@Model.News.Author</span>
+        </div>
+    </div>
+
+    <div class="main-image img-holder wide radius-base mb-4">
+        <img src="@Model.News.ImageUrl" alt="imageUrl">
+    </div>
+
+    @* Url Crawl isleminden paragraflar arasında ayrım olarak gelmisse ayrı ayrı yazsın paragraf *@
+    <div class="article-body">
+        @foreach (var item in Model.News.Content.Split('\n',StringSplitOptions.RemoveEmptyEntries))
+        {
+            <p>@Model.News.Content.Trim()</p>
+        }
+    </div>
+
+</header>
+
+
+
+@* Sozcu'den direkt haber detayı kısmından header ve div class article body html kodlarını aldık *@
