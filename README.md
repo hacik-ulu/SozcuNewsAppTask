@@ -1,0 +1,2 @@
+# SozcuNewsAppTask
+AqvaTech Candidate Task
