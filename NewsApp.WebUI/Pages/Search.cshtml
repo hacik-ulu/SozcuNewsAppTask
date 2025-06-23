@@ -9,7 +9,7 @@
         <form id="search-form" method="get" class="d-flex">
             <div class="form-control rounded-pill d-flex align-items-center ps-4 flex-grow-1">
                 <i class="bi bi-search text-secondary me-2"></i>
-                <input type="text" class="sozcu-search-input border-0 fs-6" name="search" id="sozcu_search_input" placeholder="Haberi ara" value="@Model.Search" autocomplete="off">
+                <input type="text" class="sozcu-search-input border-0 fs-6" name="query" id="sozcu_search_input" placeholder="Haberi ara" value="@Model.Search" autocomplete="off">
             </div>
             <button type="submit" class="btn btn-danger ms-3">Ara</button>
         </form>
@@ -24,17 +24,33 @@
     {
         <h5 class="mt-4">"@Model.Search" için arama sonuçları:</h5>
 
-        @foreach (var item in Model.NewsList)
-        {
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">@item.Title</h5>
-                    <p class="card-text">@item.Summary</p>
-                    <p class="card-text"><small class="text-muted">@item.Author - @item.Category</small></p>
-                    <a href="@item.NewsUrl" class="btn btn-sm btn-primary" target="_blank">Habere Git</a>
+        <div class="row">
+            @foreach (var item in Model.NewsList)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <a href="@item.NewsUrl" target="_blank">
+                            <img src="@item.ImageUrl" class="card-img-top rounded-top" alt="@item.Title">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate">@item.Title</h5>
+                            <p class="card-text text-truncate">@item.Summary</p>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <small class="text-muted">@item.Author - @item.Category</small><br />
+                            <a href="@item.NewsUrl" class="btn btn-sm btn-primary mt-2 me-2" target="_blank">Habere Git</a> 
+                            <a asp-page="/Detail" asp-route-id="@item.Id" class="btn btn-sm btn-secondary mt-2" target="_blank">Detay</a>
+                        </div>
+
+                        <div class ="card-footer bg-white border-0">
+
+                        </div>
+
+                    </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
+
     }
     else
     {

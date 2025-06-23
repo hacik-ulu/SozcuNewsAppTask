@@ -7,6 +7,7 @@
 
 <header class="mb-4">
 
+
     <div class="pe-2">
         <p>Haberler - <span style="color:red;">@Model.News.Category</span>
     </div>
@@ -43,10 +44,10 @@
         <img src="@Model.News.ImageUrl" alt="imageUrl">
     </div>
 
-    @* Url Crawl isleminden paragraflar arasında ayrım olarak gelmisse ayrı ayrı yazsın paragraf *@
-    <div class="article-body">
-        <p>@Model.News.Content</p>
+    <div class="news-content">
+        @Html.Raw(Model.News.Content)
     </div>
+
 
 </header>
 

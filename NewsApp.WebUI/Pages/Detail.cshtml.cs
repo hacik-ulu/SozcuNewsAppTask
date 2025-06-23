@@ -8,7 +8,6 @@ namespace NewsApp.WebUI.Pages
     public class DetailModel : PageModel
     {
         private readonly ElasticsearchContext _elasticsearchContext;
-        public NewsAppDto NewsDetail { get; set; }
         public NewsAppDto News { get; set; }
 
 
@@ -19,6 +18,7 @@ namespace NewsApp.WebUI.Pages
 
         public async Task OnGetAsync(string id)
         {
+            // Id'nin tutulmasý
             var news = await _elasticsearchContext.Client.GetAsync<NewsAppDto>(id, x => x.Index("news-app-demo"));
 
             News = news.Source;

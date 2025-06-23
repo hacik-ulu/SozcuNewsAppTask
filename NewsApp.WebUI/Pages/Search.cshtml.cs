@@ -18,21 +18,21 @@ namespace NewsApp.WebUI.Pages
 
         public async Task OnGetAsync()
         {
-            Search = Request.Query["search"]; // URL'den gelen arama parametresini al
+            Search = Request.Query["query"]; // URL'den gelen arama parametresini al
 
             if (string.IsNullOrWhiteSpace(Search))
             {
                 return; // boşsa işlem yapma
             }
 
+            var normalizedSearch = Normalize(Search); // arama parametresi türkçe ve büyük harf küçük harf uyumuna göre normalize ediyoruz.
+
             //multimatch --> bir arama sorgusunun birden fazla fieldda kontrol edilmesini saglıyor.
-
-
             var searchQuery = await _elasticClient.SearchAsync<NewsAppDto>(s => s
                 .Query(q => q
                     .Bool(b => b // birden fazla sorguyu bir araya getirmek adına kullanıyoruz.
                         .Should(
-                            // Fuzzy destekli MultiMatch araması
+                            // Fuzzy destekli MultiMatch araması (orijinal hali)
                             m => m.MultiMatch(mm => mm  // Örneğin ilkay yazdığımızda tüm fieldlar için (multimatch) kontrol sağlıyoruz.
                                 .Fields(f => f
                                     .Field(p => p.Title)
@@ -46,7 +46,21 @@ namespace NewsApp.WebUI.Pages
                                 .PrefixLength(1) // benzer harf durumu
                                 .MaxExpansions(30) // kaç farklı varyasyon deniyoruz
                             ),
-                            // Kelimenin yanlıs yazımı dısında kelimenin en basından eslestirilmesi islemi adına orneğin ilk yazıp ilkay sonuclar gelmesi adına TextQueryType kullanıyoruz.
+                            // Normalize edilmiş arama (büyük/küçük + Türkçe karakter dönüşüm)
+                            m => m.MultiMatch(mm => mm
+                                .Fields(f => f
+                                    .Field(p => p.Title)
+                                    .Field(p => p.Summary)
+                                    .Field(p => p.Content)
+                                    .Field(p => p.Author)
+                                    .Field(p => p.Category)
+                                )
+                                .Query(normalizedSearch)
+                                .Fuzziness(Fuzziness.Auto)
+                                .PrefixLength(1)
+                                .MaxExpansions(30)
+                            ),
+                            // PhrasePrefix ile eşleşmenin başından itibaren eşleşme kontrolü
                             m => m.MultiMatch(mm => mm
                                 .Fields(f => f
                                     .Field(p => p.Title)
@@ -65,9 +79,31 @@ namespace NewsApp.WebUI.Pages
 
             if (searchQuery.IsValid)
             {
-                NewsList = searchQuery.Documents.ToList();
+                NewsList = searchQuery.Hits.Select(hit =>
+                {
+                    var documentary = hit.Source;
+                    documentary.Id = hit.Id;
+                    return documentary;
+                }).ToList();
             }
         }
+
+        private string Normalize(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+
+            var normalized = input.ToLower(new System.Globalization.CultureInfo("tr-TR"));
+
+            return normalized
+                .Replace("ç", "c")
+                .Replace("ğ", "g")
+                .Replace("ı", "i")
+                .Replace("ö", "o")
+                .Replace("ş", "s")
+                .Replace("ü", "u");
+        }
+
+
     }
 }
 
@@ -87,3 +123,5 @@ namespace NewsApp.WebUI.Pages
 
 
 #endregion
+
+// sesli sessiz harf, büyük küçük harf kontrolü yapılacak.

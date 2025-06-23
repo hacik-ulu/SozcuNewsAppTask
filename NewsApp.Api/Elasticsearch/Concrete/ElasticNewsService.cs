@@ -21,6 +21,7 @@ namespace NewsApp.Api.Elasticsearch.Concrete
             _newsApiUrl = configuration["NewsApi:Url"];
 
         }
+
         public async Task BulkNewsFromApiAsync()
         {
             try
@@ -60,7 +61,7 @@ namespace NewsApp.Api.Elasticsearch.Concrete
                 bulkNews.Subscribe(new BulkAllObserver(
                        // Her parça veri başarılı gonderilirse logluyoruz
                        // Batch işlendi --> Veri elasticsearch veritabanına kaydedildi
-                       onNext: y=> _logger.LogInformation("Batch işlendi."), 
+                       onNext: y => _logger.LogInformation("Batch işlendi."),
                        onError: error =>
                        {
                            // Burada bulk işlemi devam ederken mevcutta bir hata olursa direkt hatayı saklayıp fırlatıyor.
@@ -89,7 +90,15 @@ namespace NewsApp.Api.Elasticsearch.Concrete
                 // Bulk işleminin sonuclanmasından sonra aynı zamanda beklenmeyen hataları da dahil edip hatayı/hataları fırlatıyor.
                 _logger.LogError(exception, "Çekilen verilerin elasticsearch veritabanına kayıt sürecinde hata oluştu !");
             }
+
+
+
+
         }
+
+
+
+
 
     }
 
