@@ -114,7 +114,7 @@ namespace NewsApp.Api.Elasticsearch.Concrete
 
 // https://stackoverflow.com/questions/34787350/index-indexmany-indexasnyc-indexmanyasync-with-nesthttps://www.elastic.co/docs/api/doc/elasticsearch/operation/operation-bulk
 
-// https://stackoverflow.com/questions/48819147/how-to-call-bulkall-method-in-elasticsearch-nest-asynchronously-in-a-windows-app?utm_source=chatgpt.com
+// https://stackoverflow.com/questions/48819147/how-to-call-bulkall-method-in-elasticsearch-nest-asynchronously-in-a-windows-app
 
-// https://stackoverflow.com/questions/68317127/how-can-i-write-multiple-updates-in-one-bulkall-method-in-elasticsearch-nest-7-1?utm_source=chatgpt.com   (loglama ve başarı/başarısızlık durumunun izlenmesi adına subscirbe metodunun kullanılması)
+// https://stackoverflow.com/questions/68317127/how-can-i-write-multiple-updates-in-one-bulkall-method-in-elasticsearch-nest-7-1  (loglama ve başarı/başarısızlık durumunun izlenmesi adına subscirbe metodunun kullanılması)
 #endregion

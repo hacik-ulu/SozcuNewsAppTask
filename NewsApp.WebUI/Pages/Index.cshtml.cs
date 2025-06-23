@@ -45,5 +45,5 @@ namespace NewsApp.WebUI.Pages
 #region
 //https://www.elastic.co/docs/reference/elasticsearch/clients/dotnet/examples
 
-// https://stackoverflow.com/questions/33834141/elasticsearch-and-nest-why-am-i-missing-the-id-field-on-a-query?utm_source=chatgpt.com Hits ile Id yakalama
+// https://stackoverflow.com/questions/33834141/elasticsearch-and-nest-why-am-i-missing-the-id-field-on-a-query Hits ile Id yakalama
 #endregion
