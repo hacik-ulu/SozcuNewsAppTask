@@ -1,3 +1,4 @@
+using Nest;
 using NewsApp.WebUI.Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddSingleton<ElasticsearchContext>();
+
+// IElasticClient ile NEST kütüphanesini kullanabiliyor oluyoruz.
+builder.Services.AddSingleton<IElasticClient>(x =>
+{
+    var context = x.GetRequiredService<ElasticsearchContext>();
+    return context.Client;
+});
 
 
 var app = builder.Build();
