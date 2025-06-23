@@ -2,3 +2,44 @@
 @model NewsApp.WebUI.Pages.SearchModel
 @{
 }
+<div class="bg-light p-4 d-flex align-items-center justify-content-center custom-page-header mb-4">
+    <div class="sozcu-search-area">
+        <h1 class="custom-page-heading text-center dm-serif-display-regular mb-4">Arama</h1>
+
+        <form id="search-form" method="get" class="d-flex">
+            <div class="form-control rounded-pill d-flex align-items-center ps-4 flex-grow-1">
+                <i class="bi bi-search text-secondary me-2"></i>
+                <input type="text" class="sozcu-search-input border-0 fs-6" name="search" id="sozcu_search_input" placeholder="Haberi ara" value="@Model.Search" autocomplete="off">
+            </div>
+            <button type="submit" class="btn btn-danger ms-3">Ara</button>
+        </form>
+
+
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Search))
+{
+    if (Model.NewsList.Any())
+    {
+        <h5 class="mt-4">"@Model.Search" için arama sonuçları:</h5>
+
+        @foreach (var item in Model.NewsList)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Title</h5>
+                    <p class="card-text">@item.Summary</p>
+                    <p class="card-text"><small class="text-muted">@item.Author - @item.Category</small></p>
+                    <a href="@item.NewsUrl" class="btn btn-sm btn-primary" target="_blank">Habere Git</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-muted mt-4">"@Model.Search" haberi için sonuç bulunumadı.</p>
+    }
+}
+
+@* sözcünün arama sayfası kısmından tasarım alındı *@
