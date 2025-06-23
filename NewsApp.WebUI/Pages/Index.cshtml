@@ -82,7 +82,7 @@
                 <div class="container">
                     <h4><a href="@item.NewsUrl" target="_blank">@item.Title</a></h4>
                     <p class="summary">
-                        @(item.Summary?.Length > 100 ? item.Summary.Substring(0, 70) + "..." : item.Summary)
+                        @(item.Summary?.Length > 70 ? item.Summary.Substring(0, 50) + "..." : item.Summary)
                     </p>
                     <p class="meta">@item.Date.ToString("yyyy-MM-dd") | @item.Author | @item.Category</p>
                     <p style="text-align:right;">

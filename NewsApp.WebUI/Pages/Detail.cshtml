@@ -45,10 +45,7 @@
 
     @* Url Crawl isleminden paragraflar arasında ayrım olarak gelmisse ayrı ayrı yazsın paragraf *@
     <div class="article-body">
-        @foreach (var item in Model.News.Content.Split('\n',StringSplitOptions.RemoveEmptyEntries))
-        {
-            <p>@Model.News.Content.Trim()</p>
-        }
+        <p>@Model.News.Content</p>
     </div>
 
 </header>
