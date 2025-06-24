@@ -4,7 +4,8 @@ using NewsApp.WebUI.Dto;
 
 namespace NewsApp.WebUI.Context
 {
-    public class ElasticsearchContext
+    // sealed oalrak yazılan sınıf başka bir sınıf tarafından miras alınamaz
+    public sealed class ElasticsearchContext
     {
         // Elasticsearch sorguları için kullandığımız client
         public ElasticClient Client { get; }

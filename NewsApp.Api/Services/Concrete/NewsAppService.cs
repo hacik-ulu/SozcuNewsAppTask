@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace NewsApp.Api.Services.Concrete
 {
-    public class NewsAppService : INewsAppService
+    public sealed class NewsAppService : INewsAppService
     {
         public async Task<List<NewsAppDto>> GetNewsListAsync()
         {

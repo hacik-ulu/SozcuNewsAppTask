@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace NewsApp.Api.Elasticsearch.Concrete
 {
-    public class ElasticNewsService : IElasticNewsService
+    public sealed class ElasticNewsService : IElasticNewsService
     {
         private readonly IElasticClient _elasticClient; //Nest ile elasticsearch ile iletisim kuruyoruz, ayrıca burada program.csdeki deploy bilgileri(secret.jsondan alınan) tutuluyor.
         private readonly ILogger<ElasticNewsService> _logger; // Uygulama kayıtları tutuyoruz.
