@@ -35,6 +35,3 @@ app.MapRazorPages();
 
 app.Run();
 
-#region VideoSrc
-//https://www.youtube.com/watch?v=8LXCxHzEIhc&ab_channel=TechWithPat
-#endregion

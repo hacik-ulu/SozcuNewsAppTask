@@ -11,12 +11,12 @@ namespace NewsApp.WebUI.Context
 
         public ElasticsearchContext(IConfiguration config)
         {
-            // elasticsearch cloud bilgileri
+            // elasticsearch cloud bilgilerini çektim.
             var cloudId = config["Elasticsearch:cloudId"];
             var user = config["Elasticsearch:user"];
             var password = config["Elasticsearch:password"];
 
-            // Elasticsearch yapılandırma ayarları cloud ve Index veritabanına bağlanma adına.
+            // Elasticsearch yapılandırma ayarları cloud ve Index veritabanına bağlanma adına işlemler gerçekleştirdim.
             var configSettings = new ConnectionSettings(cloudId, new BasicAuthenticationCredentials(user, password))
                 .DefaultIndex("news-app-demo")
                 .DefaultMappingFor<NewsAppDto>(x => x
@@ -30,13 +30,3 @@ namespace NewsApp.WebUI.Context
 
 
 
-#region Code Src
-// https://www.elastic.co/docs/reference/elasticsearch/clients/dotnet/_options_on_elasticsearchclientsettings  -->onemli
-
-//https://blexin.com/en/blog-en/how-to-integrate-elasticsearch-in-asp-net-core/
-
-//https://www.elastic.co/docs/reference/elasticsearch/clients/dotnet/connecting
-
-// https://github.com/elastic/elasticsearch-net/issues/8184
-
-#endregion

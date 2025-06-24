@@ -18,11 +18,11 @@ namespace NewsApp.WebUI.Pages
 
         public async Task OnGetAsync()
         {
-            Search = Request.Query["query"]; // URL'den gelen arama parametresini al
+            Search = Request.Query["query"]; // URL'den gelen arama parametresini alacak
 
             if (string.IsNullOrWhiteSpace(Search))
             {
-                return; // boşsa işlem yapma
+                return; // boşsa işlem yapmicak.
             }
 
             var normalizedSearch = Normalize(Search); // arama parametresi türkçe ve büyük harf küçük harf uyumuna göre normalize ediyoruz.
@@ -32,7 +32,7 @@ namespace NewsApp.WebUI.Pages
                 .Query(q => q
                     .Bool(b => b // birden fazla sorguyu bir araya getirmek adına kullanıyoruz.
                         .Should(
-                            // Fuzzy destekli MultiMatch araması (orijinal hali)
+                            // Fuzzy destekli MultiMatch araması islemmini yapiyoruz (orijinal hali)
                             m => m.MultiMatch(mm => mm  // Örneğin ilkay yazdığımızda tüm fieldlar için (multimatch) kontrol sağlıyoruz.
                                 .Fields(f => f
                                     .Field(p => p.Title)
@@ -43,10 +43,10 @@ namespace NewsApp.WebUI.Pages
                                 )
                                 .Query(Search)
                                 .Fuzziness(Fuzziness.Auto) // yazım yanlısları da olsa esneklik sağlıyoruz
-                                .PrefixLength(1) // benzer harf durumu
+                                .PrefixLength(1) // benzer harf durumu en az bir tane bile eşleşebilir şu anda
                                 .MaxExpansions(30) // kaç farklı varyasyon deniyoruz
                             ),
-                            // Normalize edilmiş arama (büyük/küçük + Türkçe karakter dönüşüm)
+                            // Normalize edilmiş arama (büyük/küçük harf uyumu ve Türkçe karakter dönüşüm islemlerini kontrol editoruz)
                             m => m.MultiMatch(mm => mm
                                 .Fields(f => f
                                     .Field(p => p.Title)
@@ -61,6 +61,7 @@ namespace NewsApp.WebUI.Pages
                                 .MaxExpansions(30)
                             ),
                             // PhrasePrefix ile eşleşmenin başından itibaren eşleşme kontrolü
+                            // Başharfinden itibaren otomatik eslesen var mı diye PhrasePrefix ile kontrol sagliyoruz.
                             m => m.MultiMatch(mm => mm
                                 .Fields(f => f
                                     .Field(p => p.Title)
@@ -88,6 +89,7 @@ namespace NewsApp.WebUI.Pages
             }
         }
 
+
         private string Normalize(string input)
         {
             if (string.IsNullOrWhiteSpace(input)) return string.Empty;
@@ -108,20 +110,5 @@ namespace NewsApp.WebUI.Pages
 }
 
 
-#region CodeSrc
-//https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-multi-match-query --> önemli
-
-//https://www.elastic.co/docs/reference/elasticsearch/clients/dotnet/query
-
-// https://stackoverflow.com/questions/31086987/searching-for-an-input-keyword-in-all-fields-of-an-elasticsearch-document-using
-
-//https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-fuzzy-query  --> fuzzy query ve max expansions
-
-//https://www.pipiho.com/es/7.7/en/query-dsl-multi-match-query.html
-
-//https://stackoverflow.com/questions/74867381/elasticsearch-partial-search-with-fuzziness-on-multiple-fields   --> Multimatch ile iki ayrı clause (yazım yanlısı ve kelime eslesmesi durumu)
 
 
-#endregion
-
-// sesli sessiz harf, büyük küçük harf kontrolü yapılacak.

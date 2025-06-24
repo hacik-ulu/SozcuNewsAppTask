@@ -21,6 +21,7 @@ builder.Services.AddSingleton<IElasticNewsService, ElasticNewsService>();
 builder.Services.AddHttpClient();
 
 // elastic search deployment ve indexleme ayarlarýný gerçekleþtirdim.
+// bilgileri secret.json ile aldým gizlilk acýsýndan.
 builder.Services.AddSingleton<IElasticClient>(x =>
 {
     var settings = new ConnectionSettings(config["cloudId"], new BasicAuthenticationCredentials(
@@ -44,8 +45,3 @@ app.UseAuthorization();
 app.MapControllers();
 app.Run();
 
-//edited deployments.
-#region VideoSrc
-// https://www.youtube.com/watch?v=tw9svKWq6tg&ab_channel=dotnetFlix
-// https://cloud.elastic.co/deployments/b5efd44d51b041638fcb92869db2c65f
-#endregion

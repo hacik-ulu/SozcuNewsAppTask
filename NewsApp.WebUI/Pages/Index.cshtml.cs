@@ -20,20 +20,18 @@ namespace NewsApp.WebUI.Pages
         public async Task OnGetAsync()
         {
             var news = await _elasticsearchContext.Client.SearchAsync<NewsAppDto>(x => x
-                .Index("news-app-demo") // Hangi tablodan veri cekceğimizi belirtiyoruz.
+                .Index("news-app-demo") // Hangi tablodan veri cekceğimizi belirtiyorum.
                 .Query(y => y.MatchAll())
                 .Sort(z => z.Descending(t => t.Date)) // en yeni tarihe göre en yeni haber gelecek
                 .Size(20)
             );
 
-            //.Documents-> Elasticsearchden gelen ve NewsAppDto nesneleriyle eşleşen koleksiyon.
-            //News = news.Documents.ToList(); // Elasticsearchden gelen verileri (dokumanlar) List<NewsAppDto> tipine ceviriyor.
-
+            // Elasticsearchden gelen veriye id ekleme ve yakalama olayıno gerçekleştiriyorum.
             News = news.Hits.Select(x =>  // Elasticden gelen her bir belge(hit) icin select yapiyoruz ve belgeye x atıyoruz
             {
                 var documentary = x.Source;  // Elasticsearchdeki asıl veriyi degiskene atiyoruz
                 documentary.Id = x.Id; // Id'yi manuel olarak  DTO'ya ekliyoruz
-                return documentary; // id'li documenti art�k geri d�n�yoruz ve listeliyoruz.
+                return documentary; // id'li documenti artık geri donuyoruz ve listeliyoruz.
             }).ToList();
         }
 
@@ -41,9 +39,3 @@ namespace NewsApp.WebUI.Pages
 }
 
 
-// Sayfalama, haber iceriklerini ve modellerini listeleme, arama çubuğu nest ile elastic search
-#region
-//https://www.elastic.co/docs/reference/elasticsearch/clients/dotnet/examples
-
-// https://stackoverflow.com/questions/33834141/elasticsearch-and-nest-why-am-i-missing-the-id-field-on-a-query Hits ile Id yakalama
-#endregion

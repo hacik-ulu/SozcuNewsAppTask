@@ -7,17 +7,12 @@ namespace NewsApp.Api.Services.Concrete
 {
     public class NewsAppService : INewsAppService
     {
-        #region Video Src
-        //https://www.youtube.com/watch?v=m9zFq6KS94Y&ab_channel=ShaunHalverson buradaki videodan WebScraper, WebScraper2 projesinden yararlandım bu sayfada.
-        #endregion
-
         public async Task<List<NewsAppDto>> GetNewsListAsync()
         {
             // Haber verilerini tutacak dto listesini oluşturdum.
             var newsList = new List<NewsAppDto>();
 
             // haberlerin çekileceği base url'i verdim.
-            //var newsUrl = "https://www.sozcu.com.tr/kategori/ekonomi/";
             var newsUrl = "https://www.sozcu.com.tr/kategori/spor";
 
             // HttpClient ile bağlantı açtım sornasında newsUrle get isteği attım ve html sayfasının gelen yanıtlarını string olarak tuttum.
@@ -26,7 +21,7 @@ namespace NewsApp.Api.Services.Concrete
 
             // Html içeriğini okumak adına (div,class,span) gelen verileri buraya yükledik - HtmlAgilityPack library indirdim ve kullandım.
             var htmlDocument = new HtmlAgilityPack.HtmlDocument();
-            htmlDocument.LoadHtml(response);
+            htmlDocument.LoadHtml(response);  // haber sitesinden gelen verileri htmlDocumente yükleyerek okumayı sağladım. 
 
             // Haber sayfasının incele -MANŞET ALANLARI- kısmından haberlerin nodeunu almak adına classları Xpath olarak verdim
             var nodes = htmlDocument.DocumentNode.SelectNodes("//div[contains(@class, 'row') and contains(@class, 'mb-4')]");
@@ -53,15 +48,17 @@ namespace NewsApp.Api.Services.Concrete
 
 
                 // Haber detay sayfasının Html içeriğini string olarak indiriyoruz.
-                // Html içeriğini anlamlı şekilde paralayarak analiz etmeyi ve işlem yapmayı hedefliyoruz.
+                // Html içeriğini anlamlı şekilde parcalayarak analiz etmeyi ve işlem yapmayı hedefledim.
                 var detail = await httpClient.GetStringAsync(totalUrl);
                 var detailDocumentary = new HtmlAgilityPack.HtmlDocument();
                 detailDocumentary.LoadHtml(detail);
 
-                // Haber başlığını alıp temizliyoruz HtmlDecode ile.
+                // Haber başlığını alıp temizliyoruz HtmlDecode ile - ozel,okunamayan karakterlerin temizlesnmesini hedefledim -.
                 var newsTitle = WebUtility.HtmlDecode(
                 detailDocumentary.DocumentNode.SelectSingleNode("//h1[@class='fw-bold mb-4']")?.InnerText.Trim()
                 ?? detailDocumentary.DocumentNode.SelectSingleNode("//h1[@class='author-content-title']")?.InnerText.Trim());
+                // null gelirse yedek olarak h1 class author-content-title'den kontrol sağlıyoruz. bazı haberlerde title fw bold mb 4 ile sağlanırken bazılarında author content title ile sağlaniyor.
+
 
                 // Haberin içeriğinin classını vererek node'unu buluyoruz.
                 var newsContentNode = detailDocumentary.DocumentNode
@@ -84,6 +81,8 @@ namespace NewsApp.Api.Services.Concrete
 
 
                 // Haber özetinin classını geçiyoruz.
+                // <meta> etiketleri genelde haberin özetini (description olarak burada)ve görselleri daha güvenilir olarak tutuyor, veri cekerken de daha temiz sonuc elde ettim.
+
                 var newsSummary = detailDocumentary.DocumentNode
                     .SelectSingleNode("//meta[@name='description']")
                     ?.GetAttributeValue("content", "") ?? "";
@@ -126,54 +125,6 @@ namespace NewsApp.Api.Services.Concrete
     }
 }
 
-#region Example Data From Sozcu
-//{
-//    "title": "Hırvat dalışçı, rekorlar kitabına girdi",
-//        "content": "Hırvat serbest dalışçı Vitomir Maricic, 29 dakika 3 saniyelik zamanlamasıyla su altında en uzun süre nefes tutma rekoru kırarak, 'Guinness Dünya Rekorlar Kitabı'na girmeye hak kazandı. Maricic, rekor denemesini ülkesinin Opatija kentinde yer alan bir otelde 3 metre derinliğindeki havuzda gerçekleştirdi. Deneme, Guinness Dünya Rekorları'nın gerekliliklerine uygunluk sağlanması amacıyla hakemler tarafından resmi olarak takip edildi. Rekor denemesine 100'den fazla izleyici de tanıklık etti. Vitomir Maricic, suyun altında 29 dakika 3 saniye nefesini tutarak dünya rekoruna imza attı ve adını 'Guinness Dünya Rekorlar Kitabı'na yazdırmayı başardı. Bu alanda bir önce rekoru, 2021 yılında 24 dakika 37 saniyelik süresiyle Hırvat sporcu Budimir Sobat kırmıştı.",
-//        "summary": "Hırvat serbest dalışçı Vitomir Maricic'den su altında en uzun süre nefes tutma rekoru. Maricic, 29 dakika 3 saniyelik zamanlamasıyla adını \"Guinness Dünya Rekorlar Kitabı\"na yazdırdı",
-//        "newsUrl": "https://www.sozcu.com.tr/hirvat-dalisci-rekorlar-kitabina-girdi-p185776",
-//        "imageUrl": "https://sozcu01.sozcucdn.com/sozcu/production/uploads/images/2025/6/ekran-goruntusu-20250619-191305png-OIpwAlQsR0_HLKkczd0emA.png?w=1270&h=675&mode=crop&scale=both",
-//        "category": "Diğer Sporlar",
-//        "author": "AA",
-//        "date": "2025-06-21T13:13:19.6519226+03:00"
-//    }
-#endregion
-
-#region Sources 
-
-//https://www.youtube.com/watch?v=m9zFq6KS94Y&ab_channel=ShaunHalverson (En cok burası)
-
-//HtmlAgilityPack ve XPath Kullanımı
-//Html Agility Pack Resmi GitHub Sayfası
-// https://github.com/zzzprojects/html-agility-pack
 
 
-//W3Schools XPath Tutorial
-// https://www.w3schools.com/xml/xpath_syntax.asp
-
-// HttpClient Kullanımı
-//HttpClient in .NET (Microsoft Docs)
-// https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient
-
-//HttpClient best practices (Stack Overflow)
-// https://stackoverflow.com/questions/15705092/do-httpclient-and-httpclienthandler-have-to-be-disposed
-
-// Regex ve Text Temizleme
-//Regex.Replace Açıklaması (Microsoft Docs)
-// https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex.replace
-
-
-//Basic Web Scraping with Selenium in C# for Google News
-//https://medium.com/%40ertekinozturgut/basic-web-scraping-via-selenium-in-c-for-google-news-c012c2b4939d
-
-//ScrapingBee – “Web Scraping with Html Agility Pack
-// https://www.scrapingbee.com/blog/html-agility-pack/   xpath syntaxlara baktım foreachler gibi biçok konuda buradan yardım aldım. önemli
-
-//HTML Agility Pack: How to Parse Data (Tutorial 2025)
-//https://www.zenrows.com/blog/html-agility-pack
-
-//Web Scraping in C#: Complete Guide 2025
-//https://www.zenrows.com/blog/web-scraping-c-sharp
-
-#endregion
 
